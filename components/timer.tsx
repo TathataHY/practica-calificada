@@ -3,9 +3,14 @@ import { useEffect, useState } from "react";
 interface Props {
   timerStarted: boolean;
   quizCompleted: boolean;
+  onTimerComplete: () => void; // Callback para indicar que el temporizador ha completado
 }
 
-const Timer: React.FC<Props> = ({ timerStarted, quizCompleted }) => {
+const Timer: React.FC<Props> = ({
+  timerStarted,
+  quizCompleted,
+  onTimerComplete,
+}) => {
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [endTime, setEndTime] = useState<Date | null>(null);
   const [timeRemaining, setTimeRemaining] = useState("30:00");
@@ -19,11 +24,6 @@ const Timer: React.FC<Props> = ({ timerStarted, quizCompleted }) => {
       setEndTime(end);
 
       const timerInterval = setInterval(() => {
-        if (quizCompleted) {
-          clearInterval(timerInterval); // Detener el temporizador si el quiz se ha completado
-          return;
-        }
-
         const now = new Date().getTime();
         const distance = end.getTime() - now;
 
@@ -39,12 +39,15 @@ const Timer: React.FC<Props> = ({ timerStarted, quizCompleted }) => {
         if (distance < 0) {
           clearInterval(timerInterval);
           setTimeRemaining("00:00");
+          if (!quizCompleted) {
+            onTimerComplete(); // Llamar a la función para indicar que el temporizador ha completado
+          }
         }
       }, 1000);
 
       return () => clearInterval(timerInterval);
     }
-  }, [timerStarted, quizCompleted]);
+  }, [timerStarted, quizCompleted, onTimerComplete]);
 
   return (
     <div className="text-left">

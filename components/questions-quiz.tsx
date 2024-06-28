@@ -45,7 +45,6 @@ const QuestionsQuiz: React.FC<Props> = ({
                 name={`question-${currentQuestion.id}`}
                 value={option}
                 checked={selectedAnswer === option}
-                disabled={showAnswer} // Deshabilitar los inputs después de mostrar la respuesta
                 onChange={() => onSelectAnswer(option)}
               />
               <label
