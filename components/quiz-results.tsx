@@ -1,4 +1,4 @@
-"use client";
+// quiz-results.tsx
 
 import React from "react";
 import { questions } from "../data/questions";
@@ -28,10 +28,18 @@ const QuizResults: React.FC<Props> = ({ answers, skippedQuestions }) => {
       }
     });
 
-    return { correctCount, incorrectCount, unansweredCount };
+    const totalQuestions = questions.length;
+    const answeredQuestions = totalQuestions - skippedQuestions.length;
+    const percentage = (correctCount / answeredQuestions) * 100;
+
+    // Calculamos el porcentaje en base a 20 preguntas respondidas
+    const percentageOutOf20 = (percentage / 100) * 20;
+
+    return { correctCount, incorrectCount, unansweredCount, percentageOutOf20 };
   };
 
-  const { correctCount, incorrectCount, unansweredCount } = calculateResults();
+  const { correctCount, incorrectCount, unansweredCount, percentageOutOf20 } =
+    calculateResults();
 
   return (
     <div className="mt-8">
@@ -43,6 +51,9 @@ const QuizResults: React.FC<Props> = ({ answers, skippedQuestions }) => {
         </p>
         <p className="font-semibold">
           Preguntas sin responder: {unansweredCount}
+        </p>
+        <p className="font-semibold">
+          Nota en porcentaje (1 al 20): {percentageOutOf20.toFixed(2)}
         </p>
       </div>
       <p>¡Gracias por completar el cuestionario!</p>
